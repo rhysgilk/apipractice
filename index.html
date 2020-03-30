@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lyrics API</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+    <h1>Lyrics for Somebody That I Used To Know</h1>
+    <div id="data">Loading...</div>
+    <!--<img src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW&apikey=db6e01309c738425e48c2daffa255cd1">-->
+    <script type="text/javascript">
+        function getLyrics() {
+            /*lyricsurl = "https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id="
+                + track_id + "&apikey=db6e01309c738425e48c2daffa255cd1";*/
+            lyricsurl = "https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id="
+                + "15953433" + "&apikey=db6e01309c738425e48c2daffa255cd1"
+            request = new XMLHttpRequest();
+            console.log("1 - request object created");
+
+            request.open("GET", lyricsurl, true);
+
+            console.log("2 - opened request file");
+
+            request.onreadystatechange = function() {
+                    console.log("3 - readystatechange event fired.");
+
+                    if (request.readyState == 4 && request.status == 200) {
+                        rawResult = request.responseText;
+                        result = rawResult.substring(9, (rawResult.length - 2));
+                        lyrics = JSON.parse(result);
+
+                        document.getElementById("data").innerHTML = 
+                        lyrics["message"]["body"]["lyrics"]["lyrics_body"];
+                    } else if (request.readyState == 4) {
+                        document.getElementById("data").innerHTML = 
+                        "Something went wrong!";
+                    } else if (request.readyState == 3) {
+                        document.getElementById("data").innerHTML = 
+                        "Too soon! Try again.";
+                    }
+            }
+            request.send()
+            console.log("4 - Request sent");
+        }
+        getLyrics();
+        /*input = prompt("Enter an artist");
+        var track_id = 0;
+
+        track = new XMLHttpRequest();
+        console.log("1 - request object created");
+        url = "https://api.musixmatch.com/ws/1.1/track.search?format=jsonp&callback=callback&q_artist=" 
+            + input.substring(0, input.indexOf(' ')) + "%20" 
+            + input.substring(input.indexOf(' ') + 1, input.length) 
+            + "&quorum_factor=1&page_size=1&page=1&apikey=db6e01309c738425e48c2daffa255cd1";
+        track.open("GET", url, true);
+        //alert(url);
+
+        console.log("2 - opened request file");
+
+        track.onreadystatechange = function() {
+                console.log("3 - readystatechange event fired.");
+
+                if (track.readyState == 4 && track.status == 200) {
+                    rawResult = track.responseText;
+                    //alert(rawResult);
+                    result = rawResult.substring(9, (rawResult.length - 2));
+                    lyrics = JSON.parse(result);
+                    track_id = lyrics["message"]["body"]["track_list"][0]["track"]["track_id"];
+                    alert(track_id);
+                    getLyrics(track_id);
+                } else if (track.readyState == 4) {
+                    document.getElementById("data").innerHTML = 
+                    "Something went wrong!";
+                } else if (track.readyState == 3) {
+                    document.getElementById("data").innerHTML = 
+                    "Too soon! Try again.";
+                }
+        }
+        track.send()
+        console.log("4 - Request sent");*/
+
+    </script>
+    <br/><br/>
+    <div>The API that I selected is called musixmatch which is a database which contains lyrics for songs</div><br/>
+    <div>https://developer.musixmatch.com</div><br/>
+    <div>I used the same methods as talked about in class. I used the track.lyrics.get method in order to return the lyrics from a given track id. Within the lyrics JSON, it is divided into many sub categories. I had to traverse to "body", "message", "lyrics" and "lyrics_body" in order to get the lyrics which were then printed.<br/>Other methods that I could have used were the search track function which I attempted to implemented, but it was buggy. This method allows the user to input an artist and I can access the top tracks from the search results and get the track_id from the results, which I would pass in to the get lyrics method.</div><br/>
+    <div>One application is for a website which has background music and you want to display the lyrics to the song and any other information about the song. Another application could be for a portfolio of an artist. This artist could display all of the lyrics of their music. A last application could be for a karaoke website which needs lyrics to display to the user to sing along to.</div>
+
+</body>
+</html>
